@@ -1,9 +1,9 @@
-body {
+.legacy-layout {
     background-color: bisque;
     font-family: serif;
 }
 
-header {
+.legacy-layout header {
     position: fixed;
     background-color: #6666FF;
     top: 0;
@@ -13,7 +13,7 @@ header {
     padding: 10px;
 }
 
-aside {
+.legacy-layout aside {
     position: fixed;  
     background-color: #99FF99;
     top: 110px;
@@ -22,7 +22,7 @@ aside {
     bottom: 20px;
     padding: 10px;
 }
-section {
+.legacy-layout section {
     position: fixed;  
     background-color: #dd8295;
     top: 110px;
@@ -32,7 +32,7 @@ section {
     padding: 10px;
     overflow-y: scroll;
 }
-footer {
+.legacy-layout footer {
     position: fixed;  
     background-color: black;
     color: white;    
@@ -43,43 +43,43 @@ footer {
     text-align: center;
 }
 
-nav {
+.legacy-layout nav {
    display: flex;
    justify-content: space-between;
    margin: 0 10px;
 }
 
-.logo {
+.legacy-layout .logo {
     font-size: 30px;
     font-weight: bold;
     font-family: cursive;
     line-height: 90px;
 }
 
-.nav-link {
+.legacy-layout .nav-link {
     text-decoration: none;
     color: white;
 }
 
-.nav-menu {
+.legacy-layout .nav-menu {
     list-style: none;
     display: flex;
     margin-right: 40px;
 }
 
-.nav-menu-item {
+.legacy-layout .nav-menu-item {
     font-size: 22px;
     margin: 0 10px;
     line-height: 90px;
 }
 
-.menu-item {
+.legacy-layout .menu-item {
     padding: 5px;
     background-color: green;
     border-radius: 10px;
 }
 
-.menu-item:hover {
+.legacy-layout .menu-item:hover {
     background-color: black;
 }
 
