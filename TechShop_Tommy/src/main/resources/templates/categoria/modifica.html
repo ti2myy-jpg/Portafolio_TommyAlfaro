@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}">
+        <title>TechShop</title>
+    </head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <section class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h4>[[#{categoria.agregar}]]</h4>
+                        </div>
+                        <form th:action="@{/categoria/guardar}" th:object="${categoria}" method="post" class="was-validated">
+                            <div class="card-body">
+                                <input type="hidden" th:field="*{idCategoria}"/>
+                                <div class="mb-3">
+                                    <label for="descripcion">[[#{categoria.descripcion}]]</label>
+                                    <input type="text" class="form-control" th:field="*{descripcion}" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rutaImagen">[[#{categoria.imagen}]]</label>
+                                    <input type="text" class="form-control" th:field="*{rutaImagen}"/>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" th:field="*{activo}"/>
+                                    <label class="form-check-label" for="activo">[[#{categoria.activo}]]</label>
+                                </div>
+                            </div>
+                            <div class="card-footer text-end">
+                                <a th:href="@{/categoria/listado}" class="btn btn-secondary">[[#{accion.regresar}]]</a>
+                                <button type="submit" class="btn btn-success">[[#{accion.guardar}]]</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

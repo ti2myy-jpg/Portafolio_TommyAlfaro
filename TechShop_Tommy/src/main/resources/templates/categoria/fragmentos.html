@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button type="button"
+                                class="btn btn-primary btn-block"
+                                data-bs-toggle="modal"
+                                data-bs-target="#agregarCategoria">
+                            <i class="fas fa-plus"></i> [[#{accion.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="agregarCategoria">
+            <div id="agregarCategoria" class="modal fade" tabindex="-1" aria-labelledby="agregarCategoriaLabel" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 id="agregarCategoriaLabel" class="modal-title">[[#{categoria.agregar}]]</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/categoria/guardar}" th:object="${categoria}" method="post" class="was-validated">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="descripcion">[[#{categoria.descripcion}]]</label>
+                                    <input type="text" class="form-control" name="descripcion" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rutaImagen">[[#{categoria.imagen}]]</label>
+                                    <input type="text" class="form-control" name="rutaImagen"/>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" name="activo" id="activo"/>
+                                    <label class="form-check-label" for="activo">[[#{categoria.activo}]]</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit">[[#{accion.guardar}]]</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="listadoCategorias" class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>[[#{categoria.listado}]]</h4>
+                        </div>
+                        <div th:if="${categorias != null and !categorias.empty}">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>[[#{categoria.descripcion}]]</th>
+                                        <th>[[#{categoria.imagen}]]</th>
+                                        <th>[[#{categoria.activo}]]</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="categoria, contador : ${categorias}">
+                                        <td>[[${contador.count}]]</td>
+                                        <td>[[${categoria.descripcion}]]</td>
+                                        <td>
+                                            <img th:src="@{${categoria.rutaImagen}}" alt="noData" height="75"/>
+                                        </td>
+                                        <td>
+                                            <span th:if="${categoria.activo}">Activa</span>
+                                            <span th:unless="${categoria.activo}">Inactiva</span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/categoria/eliminar/{idCategoria}(idCategoria=${categoria.idCategoria})}"
+                                               class="btn btn-danger">
+                                                <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/categoria/modificar/{idCategoria}(idCategoria=${categoria.idCategoria})}"
+                                               class="btn btn-warning">
+                                                <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center p-2" th:if="${categorias == null or categorias.empty}">
+                            <span>[[#{lista.vacia}]]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center bg-success text-white mb-3">
+                        <div class="card-body">
+                            <h3>[[#{categoria.total}]]</h3>
+                            <h4 class="fs-2">[[${totalCategorias}]]</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
