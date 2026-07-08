@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package TechShop.Tommy.controller;
 
+import TechShop.Tommy.domain.Categoria;
 import TechShop.Tommy.domain.Producto;
+import TechShop.Tommy.service.CategoriaService;
 import TechShop.Tommy.service.ProductoService;
 import jakarta.validation.Valid;
 import java.util.Locale;
@@ -25,12 +23,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProductoController {
 
     private final ProductoService productoService;
+    private final CategoriaService categoriaService;
     private final MessageSource messageSource;
 
     public ProductoController(
             ProductoService productoService,
+            CategoriaService categoriaService,
             MessageSource messageSource) {
         this.productoService = productoService;
+        this.categoriaService = categoriaService;
         this.messageSource = messageSource;
     }
 
@@ -40,9 +41,8 @@ public class ProductoController {
 
         model.addAttribute("productos", productos);
         model.addAttribute("totalProductos", productos.size());
-
-        // Necesario para el formulario del modal "Agregar categoría".
-        model.addAttribute("producto", new Producto());
+        model.addAttribute("categorias", categoriaService.getCategorias(true));
+        model.addAttribute("producto", nuevoProducto());
 
         return "producto/listado";
     }
@@ -123,8 +123,22 @@ public class ProductoController {
             return "redirect:/producto/listado";
         }
 
-        model.addAttribute("producto", productoOpt.get());
+        Producto producto = productoOpt.get();
+
+        if (producto.getCategoria() == null) {
+            producto.setCategoria(new Categoria());
+        }
+
+        model.addAttribute("producto", producto);
+        model.addAttribute("categorias", categoriaService.getCategorias(true));
 
         return "producto/modifica";
+    }
+
+    private Producto nuevoProducto() {
+        Producto producto = new Producto();
+        producto.setCategoria(new Categoria());
+        producto.setActivo(true);
+        return producto;
     }
 }

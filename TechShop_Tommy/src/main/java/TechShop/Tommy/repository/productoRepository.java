@@ -1,17 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package TechShop.Tommy.repository;
 
-import TechShop.Tommy.domain.Categoria;
+import TechShop.Tommy.domain.Producto;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface productoRepository extends JpaRepository<Categoria, Integer> {
+public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
-    public List<Categoria> findByActivoTrue();
-
+    public List<Producto> findByActivoTrue();
 }

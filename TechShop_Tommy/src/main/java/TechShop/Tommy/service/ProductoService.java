@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package TechShop.Tommy.service;
 
-import TechShop.Tommy.domain.Categoria;
-import TechShop.Tommy.repository.productoRepository;
+import TechShop.Tommy.domain.Producto;
+import TechShop.Tommy.repository.ProductoRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ProductoService {
 
-    private final productoRepository productoRepository;
+    private final ProductoRepository productoRepository;
     private final FirebaseStorageService firebaseStorageService;
 
     public ProductoService(
-            productoRepository productoRepository,
+            ProductoRepository productoRepository,
             FirebaseStorageService firebaseStorageService) {
 
         this.productoRepository = productoRepository;
@@ -30,7 +25,7 @@ public class ProductoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Categoria> getCategorias(boolean activos) {
+    public List<Producto> getProductos(boolean activos) {
 
         if (activos) {
             return productoRepository.findByActivoTrue();
@@ -40,25 +35,19 @@ public class ProductoService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Categoria> getCategoria(Integer idProducto) {
+    public Optional<Producto> getProducto(Integer idProducto) {
         return productoRepository.findById(idProducto);
     }
 
     @Transactional
     public void save(
-            Categoria producto,
+            Producto producto,
             MultipartFile imagenFile) {
 
-        /*
-         * Si se está modificando una categoría y no se selecciona una imagen
-         * nueva, conserva la ruta de la imagen anterior.
-         */
-        if (producto.getIdCategoria() != null) {
+        if (producto.getIdProducto() != null) {
 
-            Optional<Categoria> productoAnterior =
-                    productoRepository.findById(
-                            producto.getIdCategoria()
-                    );
+            Optional<Producto> productoAnterior =
+                    productoRepository.findById(producto.getIdProducto());
 
             if (productoAnterior.isPresent()
                     && (producto.getRutaImagen() == null
@@ -70,14 +59,8 @@ public class ProductoService {
             }
         }
 
-        /*
-         * Primero se guarda para obtener el ID de la categoría.
-         */
         producto = productoRepository.save(producto);
 
-        /*
-         * Si el usuario seleccionó una imagen, se sube a Firebase.
-         */
         if (imagenFile != null && !imagenFile.isEmpty()) {
 
             try {
@@ -85,7 +68,7 @@ public class ProductoService {
                         firebaseStorageService.uploadImage(
                                 imagenFile,
                                 "producto",
-                                producto.getIdCategoria()
+                                producto.getIdProducto()
                         );
 
                 producto.setRutaImagen(rutaImagen);
@@ -94,7 +77,7 @@ public class ProductoService {
 
             } catch (IOException e) {
                 throw new IllegalStateException(
-                        "No se pudo guardar la imagen de la categoría.",
+                        "No se pudo guardar la imagen del producto.",
                         e
                 );
             }
@@ -104,12 +87,9 @@ public class ProductoService {
     @Transactional
     public void delete(Integer idProducto) {
 
-        /*
-         * Verifica que la categoría exista.
-         */
         if (!productoRepository.existsById(idProducto)) {
             throw new IllegalArgumentException(
-                    "La categoría con ID "
+                    "El producto con ID "
                     + idProducto
                     + " no existe."
             );
@@ -117,18 +97,12 @@ public class ProductoService {
 
         try {
             productoRepository.deleteById(idProducto);
-
-            /*
-             * Obliga a Hibernate a ejecutar el DELETE aquí.
-             * Esto permite capturar el error de llave foránea
-             * dentro del try-catch.
-             */
             productoRepository.flush();
 
         } catch (DataIntegrityViolationException e) {
 
             throw new IllegalStateException(
-                    "No se puede eliminar Producto porque tiene productos asociados.",
+                    "No se puede eliminar el producto porque tiene ventas asociadas.",
                     e
             );
         }
